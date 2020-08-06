@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import matplotlib as mpl
+import matplotlib.pyplot as plt
 from scipy.stats import norm
 
 import random
@@ -52,6 +52,7 @@ def beatthebookie_strategy(data, bet, marg):
            + 1 * (data['home_score'] == data['away_score']) \
            + 2 * (data['home_score'] < data['away_score'])
 
+    import pdb; pdb.set_trace()
     earn_margin_home = ((1 / data['avg_odds_home_win'] - marg) * data['max_odds_home_win'] - 1) * \
                         (data['n_odds_home_win'] > nValidOdds)
     earn_margin_draw = ((1 / data['avg_odds_draw'] - marg) * data['max_odds_draw'] - 1) * \
@@ -76,8 +77,9 @@ def beatthebookie_strategy(data, bet, marg):
     bets_outcome = bet * (max_margin_max_odd - 1) * (max_arg == result) - bet * (max_arg != result)
     accuracy = (max_arg == result)[should_bet].apply(int)
     
+    # import pdb; pdb.set_trace()
     return [np.cumsum(bets_outcome[should_bet]), accuracy, max_margin_max_odd[should_bet], max_margin_mean_odd[should_bet], \
-            max_arg.iloc(np.where(should_bet)), top_bookie[should_bet]]
+            max_arg.iloc[np.where(should_bet)], top_bookie[should_bet]]
 
 
 [s1_money, s1_accuracy, s1_max_odds, s1_mean_odds, s1_ids, s1_top_bookie] = beatthebookie_strategy(data,bet,marg)
@@ -103,7 +105,7 @@ def random_strategy(data, n_samples, n_games, bet, p_home, p_draw, p_away):
         inds = np.random.choice(range(0,dat.shape[0]-1),(n_games),replace=False)
         sample = dat.iloc[inds]
         sample_result = result.iloc[inds]
-        bet_side = np.array([wrg.next() for i in xrange(n_games)])
+        bet_side = np.array([wrg.next() for i in range(n_games)])
         sample_max_odds = (bet_side == 0) * sample['max_odds_home_win'] + \
                          (bet_side == 1) * sample['max_odds_draw'] + \
                          (bet_side == 2) * sample['max_odds_away_win']
@@ -184,5 +186,5 @@ print('Random bet strategy statistics:\n');
 print(' # of bets: %2.0f \n Return: %2.4f\n Profit: %2.0f\n STD: %2.4f\n Expected Accuracy: %2.1f\n Accuracy: %2.2f \n' % (s2_money.shape[1],
   random_strategy_mean/(s2_money.shape[1]*bet) * 100, random_strategy_mean, random_strategy_std, s2_expected_accuracy * 100, s2_mean_accuracy * 100) )
 
-mpl.pyplot.plot(range(s1_money.shape[0]),s1_money)
-mpl.pyplot.show()
+plt.plot(range(s1_money.shape[0]),s1_money)
+plt.show()

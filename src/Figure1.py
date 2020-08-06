@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import matplotlib as mpl
+import matplotlib.pyplot as plt
 
 dir_path = '../data/'
 data = pd.read_csv(dir_path + "closing_odds.csv")
@@ -70,6 +70,7 @@ bin_odds_home_mean = []
 bin_odds_draw_mean = []
 bin_odds_away_mean = []
 
+import pdb; pdb.set_trace()
 for bn in range(0, len(odds_bins) - 2):
     #print("bin " + str(bn + 1) + " from" + str(len(odds_bins) -1) + "\n")
     # Get the data from the bin
@@ -87,10 +88,10 @@ for bn in range(0, len(odds_bins) - 2):
         acc_away.append(float(sum(home_score[inds_away] < away_score[inds_away])) / len(inds_away))
         bin_odds_away_mean.append(np.mean(p_away[inds_away]))
 
-mpl.pyplot.plot(acc_home, bin_odds_home_mean, '.k')
-mpl.pyplot.plot(acc_draw, bin_odds_draw_mean, '.r')
-mpl.pyplot.plot(acc_away, bin_odds_away_mean, '.b')
-mpl.pyplot.show()
+plt.plot(acc_home, bin_odds_home_mean, '.k')
+plt.plot(acc_draw, bin_odds_draw_mean, '.r')
+plt.plot(acc_away, bin_odds_away_mean, '.b')
+plt.show()
 
 # linear regression
 from sklearn import linear_model
